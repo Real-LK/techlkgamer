@@ -89,7 +89,6 @@ window.addEventListener('scroll', () => {
 const typedEl = document.getElementById('typed-text');
 const phrases = [
   'Gaming. Content. Community.',
-  'New videos every week.',
   'Thanks for stopping by!',
 ];
 let phraseIndex = 0;
@@ -151,7 +150,9 @@ function animateStats() {
 }
 
 /* ============================================================
-   CONTACT FORM — validation + fake send
+   CONTACT FORM — validation + SilentForms backend
+   The access key lives in the hidden "accessKey" input in index.html.
+   (Client-side by design; SilentForms keys are public-by-design.)
    ============================================================ */
 const form = document.getElementById('contactForm');
 const formError = document.getElementById('formError');
@@ -163,15 +164,15 @@ function markValidity(input, valid) {
   return valid;
 }
 
-form.addEventListener('submit', (event) => {
+form.addEventListener('submit', async (event) => {
   event.preventDefault();
   formError.hidden = true;
   formSuccess.hidden = true;
 
-  const name = form.name;
-  const email = form.email;
-  const subject = form.subject;
-  const message = form.message;
+  const name = form.elements.namedItem('name');
+  const email = form.elements.namedItem('email');
+  const subject = form.elements.namedItem('subject');
+  const message = form.elements.namedItem('message');
 
   const checks = [
     markValidity(name, name.value.trim().length >= 2),
@@ -186,18 +187,45 @@ form.addEventListener('submit', (event) => {
     return;
   }
 
-  // No backend: simulate a send, then confirm to the user
   const submitBtn = form.querySelector('button[type="submit"]');
+  const originalBtnHTML = submitBtn.innerHTML;
+
+  // accessKey comes from the hidden input in the form; FormData picks it up below
+  const accessKey = (form.elements.namedItem('accessKey')?.value || '').trim();
+  if (!accessKey) {
+    formError.textContent = 'This form isn’t configured yet — the SilentForms access key is blank in index.html.';
+    formError.hidden = false;
+    return;
+  }
+
   submitBtn.disabled = true;
   submitBtn.textContent = 'Sending...';
 
-  setTimeout(() => {
-    form.reset();
-    form.querySelectorAll('.invalid').forEach((el) => el.classList.remove('invalid'));
+  try {
+    const data = Object.fromEntries(new FormData(form)); // includes accessKey + sf_extra honeypot
+    data.accessKey = accessKey;
+    const response = await fetch('https://silentforms.com/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    const result = await response.json().catch(() => null);
+
+    if (response.ok && result && result.status === 'success') {
+      form.reset();
+      form.querySelectorAll('.invalid').forEach((el) => el.classList.remove('invalid'));
+      formSuccess.hidden = false;
+    } else {
+      formError.textContent = (result && result.message) || 'Message could not be sent. Please try again later.';
+      formError.hidden = false;
+    }
+  } catch (err) {
+    formError.textContent = 'Network error — please check your connection and try again.';
+    formError.hidden = false;
+  } finally {
     submitBtn.disabled = false;
-    submitBtn.innerHTML = 'Send Message <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>';
-    formSuccess.hidden = false;
-  }, 900);
+    submitBtn.innerHTML = originalBtnHTML;
+  }
 });
 
 // Clear the red highlight as the user fixes a field

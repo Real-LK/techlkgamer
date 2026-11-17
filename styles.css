@@ -427,7 +427,7 @@ main {
 /* ===== About cards ===== */
 .cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.25rem;
   width: min(1100px, 100% - 3rem);
   margin: 0 auto 2rem;

@@ -96,16 +96,6 @@
           <h3>Content Creation</h3>
           <p>Videos, edits, and behind-the-scenes of building TechLKGamer from the ground up.</p>
         </article>
-
-        <article class="card">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
-            </svg>
-          </div>
-          <h3>Always Live</h3>
-          <p>Catch me live streaming, chatting with the community, and grinding new releases.</p>
-        </article>
       </div>
 
       <!-- Stats bar -->
@@ -133,12 +123,6 @@
           <ul class="contact-details">
             <li>
               <span class="detail-icon">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
-              </span>
-              <span><strong>Email</strong><br /><a href="mailto:techlkgamer@gmail.com">techlkgamer@gmail.com</a></span>
-            </li>
-            <li>
-              <span class="detail-icon">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M23.5 6.5a3.02 3.02 0 0 0-2.12-2.14C19.5 4 12 4 12 4s-7.5 0-9.38.36A3.02 3.02 0 0 0 .5 6.5 32.1 32.1 0 0 0 .14 12 32.1 32.1 0 0 0 .5 17.5a3.02 3.02 0 0 0 2.12 2.14C4.5 20 12 20 12 20s7.5 0 9.38-.36a3.02 3.02 0 0 0 2.12-2.14A32.1 32.1 0 0 0 23.86 12 32.1 32.1 0 0 0 23.5 6.5zM9.6 15.6V8.4l5.94 3.6z"/></svg>
               </span>
               <span><strong>YouTube</strong><br /><a href="https://youtube.com/@LK_techgamer-y3m" target="_blank" rel="noopener noreferrer">@LK_techgamer-y3m</a></span>
@@ -147,6 +131,12 @@
         </div>
 
         <form class="contact-form" id="contactForm" novalidate>
+          <!-- SilentForms access key (client-side by design; powers the "Send Message" form) -->
+          <input type="hidden" name="accessKey" value="fb898d2688e2199d1348e9a308568f215cd9fa7c477587c696b092a909ac9ed6" />
+          <!-- Honeypot: off-screen, so people never see it; bots fill it in -->
+          <div style="position: absolute; left: -9999px;" aria-hidden="true">
+            <input type="text" name="sf_extra" tabindex="-1" autocomplete="off" />
+          </div>
           <div class="form-row">
             <div class="form-group">
               <label for="name">Name</label>
