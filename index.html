@@ -8,15 +8,10 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-
-  <!-- Animated starfield background -->
-  <canvas id="starfield" aria-hidden="true"></canvas>
-  <div class="glow-orb glow-orb-1" aria-hidden="true"></div>
-  <div class="glow-orb glow-orb-2" aria-hidden="true"></div>
 
   <!-- ===== NAVBAR ===== -->
   <header class="navbar" id="navbar">
@@ -77,7 +72,7 @@
 
       <!-- About cards -->
       <div class="cards" aria-label="Highlights">
-        <article class="card">
+        <a class="card card-link" href="#games" data-nav="games" aria-label="Gaming — view the list of games I play">
           <div class="card-icon">
             <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/>
@@ -85,7 +80,10 @@
           </div>
           <h3>Gaming</h3>
           <p>Gameplay, let's plays, and walkthroughs from the games I'm obsessed with right now.</p>
-        </article>
+          <span class="card-cta">View games list
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </span>
+        </a>
 
         <article class="card">
           <div class="card-icon">
@@ -105,6 +103,42 @@
         <div class="stat"><span class="stat-number" data-target="7" data-suffix="">0</span><span class="stat-label">Days a Week</span></div>
         <div class="stat-divider" aria-hidden="true"></div>
         <div class="stat"><span class="stat-number" data-target="1" data-suffix="">0</span><span class="stat-label">Channel: TechLKGamer</span></div>
+      </div>
+    </section>
+
+    <!-- ===== GAMES PAGE ===== -->
+    <section class="page page-games" id="page-games" role="main" aria-labelledby="games-heading" hidden>
+      <div class="games-wrapper">
+        <div class="games-header">
+          <h1 class="contact-heading games-heading" id="games-heading">My Games</h1>
+          <div class="heading-underline" aria-hidden="true">
+            <span class="underline-bar"></span>
+            <span class="underline-diamond"></span>
+            <span class="underline-bar"></span>
+          </div>
+          <p class="contact-lead games-lead">The games I play and the names I go by in them. Add more rows as I grind new titles.</p>
+        </div>
+
+        <ul class="games-list" aria-label="Games and my in-game names">
+          <li class="game-row">
+            <span class="game-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="15" y1="13" x2="15.01" y2="13"/><line x1="18" y1="11" x2="18.01" y2="11"/><path d="M17.32 5H6.68a4 4 0 0 0-3.98 4.5C2.7 11.5 2 17 2 17a2 2 0 0 0 3.3 1.6l2.6-2.6a2 2 0 0 1 1.4-.6h6a2 2 0 0 1 1.4.6l2.6 2.6a2 2 0 0 0 3.3-1.6s-.7-5.5-.7-7.5A4 4 0 0 0 17.32 5z"/></svg>
+            </span>
+            <div class="game-info">
+              <span class="game-name">Roblox</span>
+              <code class="game-handle" id="handle-roblox">progamer625001</code>
+            </div>
+            <button class="copy-btn" type="button" data-copy="progamer625001" aria-label="Copy Roblox username to clipboard">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span class="copy-label">Copy</span>
+            </button>
+          </li>
+        </ul>
+
+        <a class="btn btn-ghost games-back" href="#home" data-nav="home">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+          Back to Home
+        </a>
       </div>
     </section>
 

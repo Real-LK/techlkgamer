@@ -12,6 +12,7 @@ document.getElementById('footerYear').textContent = new Date().getFullYear();
    ============================================================ */
 const pages = {
   home: document.getElementById('page-home'),
+  games: document.getElementById('page-games'),
   contact: document.getElementById('page-contact'),
 };
 
@@ -150,6 +151,42 @@ function animateStats() {
 }
 
 /* ============================================================
+   GAMES PAGE — copy in-game name to clipboard
+   ============================================================ */
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (err) {
+    // Fallback for older browsers / non-secure contexts
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    const ok = document.execCommand('copy');
+    textarea.remove();
+    return ok;
+  }
+}
+
+document.querySelectorAll('.copy-btn').forEach((button) => {
+  const label = button.querySelector('.copy-label');
+  const originalLabel = label ? label.textContent : '';
+  button.addEventListener('click', async () => {
+    const ok = await copyText(button.dataset.copy || '');
+    if (!label) return;
+    label.textContent = ok ? 'Copied!' : 'Failed';
+    button.classList.add('copied');
+    setTimeout(() => {
+      label.textContent = originalLabel;
+      button.classList.remove('copied');
+    }, 1600);
+  });
+});
+
+/* ============================================================
    CONTACT FORM — validation + SilentForms backend
    The access key lives in the hidden "accessKey" input in index.html.
    (Client-side by design; SilentForms keys are public-by-design.)
@@ -232,61 +269,6 @@ form.addEventListener('submit', async (event) => {
 form.querySelectorAll('input, textarea').forEach((input) => {
   input.addEventListener('input', () => input.classList.remove('invalid'));
 });
-
-/* ============================================================
-   STARFIELD CANVAS BACKGROUND
-   ============================================================ */
-const canvas = document.getElementById('starfield');
-const ctx = canvas.getContext('2d');
-let stars = [];
-let width = 0;
-let height = 0;
-
-function resizeCanvas() {
-  width = canvas.width = window.innerWidth;
-  height = canvas.height = window.innerHeight;
-  const density = Math.floor((width * height) / 9000);
-  stars = Array.from({ length: density }, () => ({
-    x: Math.random() * width,
-    y: Math.random() * height,
-    radius: Math.random() * 1.4 + 0.3,
-    baseAlpha: Math.random() * 0.6 + 0.25,
-    twinkleSpeed: Math.random() * 0.02 + 0.008,
-    phase: Math.random() * Math.PI * 2,
-    drift: (Math.random() - 0.5) * 0.12,
-  }));
-}
-
-function drawStars(time) {
-  ctx.clearRect(0, 0, width, height);
-  for (const star of stars) {
-    star.x += star.drift;
-    if (star.x < 0) star.x = width;
-    if (star.x > width) star.x = 0;
-
-    const alpha = star.baseAlpha * (0.6 + 0.4 * Math.sin(time * star.twinkleSpeed + star.phase));
-    ctx.globalAlpha = alpha;
-    ctx.fillStyle = '#bcd0ff';
-    ctx.shadowBlur = 6;
-    ctx.shadowColor = '#2f6bff';
-    ctx.beginPath();
-    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-    ctx.fill();
-  }
-  ctx.globalAlpha = 1;
-  ctx.shadowBlur = 0;
-  requestAnimationFrame(drawStars);
-}
-
-const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
-if (!reducedMotion) {
-  requestAnimationFrame(drawStars);
-} else {
-  // Static stars for reduced motion
-  drawStars(0);
-}
 
 /* ============================================================
    INIT — land on Home by default (respect #hash if present)
