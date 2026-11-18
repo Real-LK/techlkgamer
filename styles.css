@@ -808,6 +808,16 @@ main {
   border-color: rgba(77, 225, 156, 0.4);
 }
 
+.game-icon .app-icon {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 11px;
+}
+
+.download-btn { text-decoration: none; }
+
 .games-back { margin-top: 1.75rem; }
 
 @media (max-width: 640px) {
