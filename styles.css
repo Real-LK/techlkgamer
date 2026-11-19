@@ -191,6 +191,11 @@ main {
   animation: pageIn 0.55s ease both;
 }
 
+/* Respect the hidden attribute everywhere (author display rules can override it) */
+[hidden] {
+  display: none !important;
+}
+
 .page.visible { display: flex; flex-direction: column; }
 
 @keyframes pageIn {
@@ -333,6 +338,78 @@ main {
   justify-content: center;
   margin-top: 2.2rem;
 }
+
+/* ===== Leave a Like! ===== */
+.like-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 1.5rem;
+}
+
+.like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--blue-soft);
+  background: linear-gradient(160deg, rgba(47, 99, 232, 0.22), rgba(11, 16, 32, 0.7));
+  border: 1px solid var(--navy-700);
+  border-radius: 999px;
+  padding: 0.6rem 1.3rem 0.6rem 1rem;
+  cursor: pointer;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, color 0.25s ease;
+}
+
+.like-btn:hover {
+  color: #e8edfb;
+  border-color: var(--blue-bright);
+  box-shadow: 0 0 22px rgba(74, 125, 255, 0.35);
+  transform: translateY(-2px);
+}
+
+.like-heart { color: #77839f; transition: color 0.25s ease, fill 0.25s ease; }
+.like-btn:hover .like-heart { color: #d98aa0; }
+
+.like-btn.liked {
+  border-color: rgba(255, 107, 139, 0.45);
+  color: #ffc4d0;
+  box-shadow: 0 0 22px rgba(255, 107, 139, 0.28);
+}
+
+.like-btn.liked .like-heart {
+  color: #ff6b8b;
+  fill: #ff6b8b;
+}
+
+.like-btn.liked-anim .like-heart {
+  animation: heartPop 0.45s ease;
+}
+
+.like-count {
+  min-width: 2.2ch;
+  text-align: center;
+  color: #e6ebff;
+  background: linear-gradient(160deg, var(--blue-bright), var(--blue));
+  border-radius: 999px;
+  padding: 0.18rem 0.6rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  box-shadow: 0 0 12px rgba(74, 125, 255, 0.4);
+}
+
+@keyframes heartPop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.6); }
+  100% { transform: scale(1); }
+}
+
+
 
 /* ===== Buttons ===== */
 .btn {

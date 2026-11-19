@@ -152,6 +152,39 @@ function animateStats() {
 }
 
 /* ============================================================
+   HOMEPAGE — Leave a Like! (stored locally on this device)
+   ============================================================ */
+const likeBtn = document.getElementById('likeBtn');
+const likeCountEl = document.getElementById('likeCount');
+const LIKE_KEY = 'tlkg-likes';
+
+if (likeBtn && likeCountEl) {
+  const LIKE_STATE_KEY = 'tlkg-liked';
+  let likes = Math.max(0, Number(localStorage.getItem(LIKE_KEY)) || 0);
+  let liked = localStorage.getItem(LIKE_STATE_KEY) === '1';
+
+  const renderLikes = () => {
+    likeCountEl.textContent = String(likes);
+    likeBtn.classList.toggle('liked', liked);
+    likeBtn.setAttribute('aria-pressed', String(liked));
+  };
+
+  likeBtn.addEventListener('click', () => {
+    liked = !liked;
+    likes = Math.max(0, likes + (liked ? 1 : -1));
+    localStorage.setItem(LIKE_KEY, String(likes));
+    localStorage.setItem(LIKE_STATE_KEY, liked ? '1' : '0');
+    renderLikes();
+    // Restart the pop animation
+    likeBtn.classList.remove('liked-anim');
+    void likeBtn.offsetWidth;
+    likeBtn.classList.add('liked-anim');
+  });
+
+  renderLikes();
+}
+
+/* ============================================================
    GAMES PAGE — copy in-game name to clipboard
    ============================================================ */
 async function copyText(text) {
