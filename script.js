@@ -36,6 +36,7 @@ function showPage(name) {
   navLinksEl.classList.remove('open');
   hamburger.classList.remove('open');
   hamburger.setAttribute('aria-expanded', 'false');
+  body.classList.remove('menu-open');
 
   // Keep the URL hash in sync (no page reload)
   if (window.location.hash !== '#' + name) {
@@ -61,11 +62,13 @@ document.querySelectorAll('[data-nav]').forEach((el) => {
    ============================================================ */
 const hamburger = document.getElementById('hamburger');
 const navLinksEl = document.getElementById('navLinks');
+const body = document.body;
 
 hamburger.addEventListener('click', () => {
   const open = navLinksEl.classList.toggle('open');
   hamburger.classList.toggle('open', open);
   hamburger.setAttribute('aria-expanded', String(open));
+  body.classList.toggle('menu-open', open);
 });
 
 // Close the mobile menu when clicking outside of it
@@ -75,6 +78,7 @@ document.addEventListener('click', (event) => {
   navLinksEl.classList.remove('open');
   hamburger.classList.remove('open');
   hamburger.setAttribute('aria-expanded', 'false');
+  body.classList.remove('menu-open');
 });
 
 /* ============================================================
