@@ -209,7 +209,7 @@ async function copyText(text) {
   }
 }
 
-document.querySelectorAll('.copy-btn').forEach((button) => {
+document.querySelectorAll('.copy-btn[data-copy]').forEach((button) => {
   const label = button.querySelector('.copy-label');
   const originalLabel = label ? label.textContent : '';
   button.addEventListener('click', async () => {

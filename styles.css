@@ -843,6 +843,15 @@ main {
   border-radius: 11px;
 }
 
+.game-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  flex: 0 0 auto;
+}
+
 .download-btn { text-decoration: none; }
 
 .games-back { margin-top: 1.75rem; }
