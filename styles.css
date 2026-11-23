@@ -42,6 +42,11 @@ body {
   flex-direction: column;
 }
 
+/* Native form controls don't inherit fonts — keep them on Google Sans too */
+button, input, textarea, select, optgroup {
+  font-family: var(--font-body);
+}
+
 /* ============================================================
    NAVBAR — mobile base (360px–768px): fixed right drawer
    ============================================================ */
