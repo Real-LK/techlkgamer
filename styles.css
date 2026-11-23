@@ -10,13 +10,13 @@
   --navy-900: #0b1220;
   --navy-800: #101a2b;
   --navy-700: #1a2a42;
-  --blue: #224a87;
-  --blue-bright: #326fc4;
-  --blue-neon: #4a93dd;
-  --blue-soft: #93b5ee;
-  --text: #e4e9f1;
-  --text-dim: #8c96a6;
-  --border: #1a2433;
+  --blue: #1a4a94;
+  --blue-bright: #2b72d6;
+  --blue-neon: #4796e5;
+  --blue-soft: #7ba7f2;
+  --text: #e6ebf4;
+  --text-dim: #8999b3;
+  --border: #18263a;
   --font-display: 'Google Sans', sans-serif;
   --font-body: 'Google Sans', sans-serif;
 }
@@ -640,7 +640,7 @@ main {
 .form-group input:focus,
 .form-group textarea:focus {
   border-color: var(--blue-bright);
-  box-shadow: 0 0 0 2px rgba(74, 147, 221, 0.2);
+  box-shadow: 0 0 0 2px rgba(71, 150, 229, 0.2);
 }
 
 .form-group input.invalid,
