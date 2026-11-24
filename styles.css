@@ -10,10 +10,10 @@
   --navy-900: #0b1220;
   --navy-800: #101a2b;
   --navy-700: #1a2a42;
-  --blue: #1a4a94;
-  --blue-bright: #2b72d6;
-  --blue-neon: #4796e5;
-  --blue-soft: #7ba7f2;
+  --blue: #144692;
+  --blue-bright: #216dd8;
+  --blue-neon: #3a92eb;
+  --blue-soft: #6fa1f6;
   --text: #e6ebf4;
   --text-dim: #8999b3;
   --border: #18263a;
@@ -640,7 +640,7 @@ main {
 .form-group input:focus,
 .form-group textarea:focus {
   border-color: var(--blue-bright);
-  box-shadow: 0 0 0 2px rgba(71, 150, 229, 0.2);
+  box-shadow: 0 0 0 2px rgba(58, 146, 235, 0.2);
 }
 
 .form-group input.invalid,
