@@ -938,13 +938,28 @@ main {
   .form-group input,
   .form-group textarea { font-size: 1.05rem; }
 
-  .hero { padding: clamp(2.5rem, 6vh, 5rem) 1.5rem 2.5rem; }
+  /* ---- Tighter vertical rhythm so pages need less scrolling ----
+     The navbar is static on PC, so the 72px offset that clears the
+     fixed mobile bar is dead space here; and the page min-height was
+     double-counting the nav + footer. */
+  main { padding-top: 0; }
+  .page { min-height: calc(100vh - 72px - 54px); }
+
+  .hero { padding: clamp(1.5rem, 4vh, 2.75rem) 1.5rem 1.75rem; }
+  .hero-badge { margin-bottom: 1.1rem; }
   .about-heading { font-size: clamp(2.6rem, 8vw, 4.5rem); }
-  .channel-name { font-size: clamp(1.15rem, 3.4vw, 1.7rem); }
-  .tagline { font-size: clamp(1rem, 2.4vw, 1.3rem); }
-  .hero-actions { margin-top: 2.2rem; }
-  .cards { margin-bottom: 2rem; }
-  .stats-bar { margin-bottom: 2.5rem; }
+  .heading-underline { margin-top: 1.15rem; }
+  .channel-name { margin-top: 1rem; font-size: clamp(1.15rem, 3.4vw, 1.7rem); }
+  .tagline { margin-top: 0.85rem; font-size: clamp(1rem, 2.4vw, 1.3rem); }
+  .hero-actions { margin-top: 1.5rem; }
+  .like-row { margin-top: 1rem; }
+  .card { padding: 1.35rem 1.4rem; }
+  .cards { margin-bottom: 1.5rem; }
+  .stats-bar { margin-bottom: 1.75rem; padding: 0.95rem 1rem; }
+  .games-wrapper { padding: clamp(1.5rem, 3.5vh, 2.5rem) 0; }
+  .games-list { margin-top: 1.5rem; }
+  .games-back { margin-top: 1.4rem; }
+  .contact-wrapper { padding: clamp(1.25rem, 3vh, 2.25rem) 0; }
 }
 
 /* ============================================================
