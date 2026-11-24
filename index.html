@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=3" />
+  <link rel="stylesheet" href="styles.css?v=4" />
 </head>
 <body>
 
@@ -79,33 +79,93 @@
         </div>
       </div>
 
-      <!-- About cards -->
-      <div class="cards" aria-label="Highlights">
-        <a class="card card-link" href="#games" data-nav="games" aria-label="Gaming — view the list of games I play">
+      <!-- ===== About card: Gaming + Content Creation merged ===== -->
+      <div class="cards" aria-label="What I do">
+        <section class="card card-merged" aria-labelledby="mergedCardTitle">
           <div class="card-icon">
             <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/>
             </svg>
           </div>
-          <h3>Gaming</h3>
-          <p>Games I play and all the download links so you can play them.</p>
-          <span class="card-cta">View games list
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </span>
-        </a>
+          <h3 id="mergedCardTitle">Gaming &amp; Content Creation</h3>
+          <p>The games I play and other YouTube things.</p>
 
-        <a class="card card-link" href="#video-editors" data-nav="video-editors" aria-label="Content Creation — view the video editors I use">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M15 10l4.55-2.28A1 1 0 0 1 21 8.62v6.76a1 1 0 0 1-1.45.9L15 14M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-            </svg>
-          </div>
-          <h3>Content Creation</h3>
-          <p>Videos, edits, and behind-the-scenes of building TechLKGamer from the ground up.</p>
-          <span class="card-cta">View editors
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </span>
-        </a>
+          <ul class="games-list card-games" aria-label="Games I play and the editor I use">
+            <li class="game-row">
+              <span class="game-icon" aria-hidden="true">
+                <img class="app-icon" src="assets/roblox.png" alt="" width="56" height="56" />
+              </span>
+              <div class="game-info">
+                <span class="game-name">Roblox</span>
+                <code class="game-handle">progamer625001</code>
+              </div>
+              <div class="game-actions">
+                <button class="copy-btn" type="button" data-copy="progamer625001" aria-label="Copy Roblox username to clipboard">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  <span class="copy-label">Copy</span>
+                </button>
+                <a class="copy-btn download-btn" href="https://www.roblox.com/download" target="_blank" rel="noopener noreferrer" aria-label="Download Roblox (opens roblox.com)">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+                  <span class="copy-label">Download</span>
+                </a>
+              </div>
+            </li>
+
+            <li class="game-row">
+              <span class="game-icon" aria-hidden="true">
+                <img class="app-icon" src="assets/fortnite.webp" alt="" width="56" height="56" />
+              </span>
+              <div class="game-info">
+                <span class="game-name">Fortnite</span>
+                <code class="game-handle">Overhead_Swan6</code>
+              </div>
+              <div class="game-actions">
+                <button class="copy-btn" type="button" data-copy="Overhead_Swan6" aria-label="Copy Fortnite username to clipboard">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  <span class="copy-label">Copy</span>
+                </button>
+                <a class="copy-btn download-btn" href="https://store.epicgames.com/p/fortnite" target="_blank" rel="noopener noreferrer" aria-label="Download Fortnite (opens store.epicgames.com)">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+                  <span class="copy-label">Download</span>
+                </a>
+              </div>
+            </li>
+
+            <li class="game-row">
+              <span class="game-icon" aria-hidden="true">
+                <img class="app-icon" src="assets/minecraft.webp" alt="" width="56" height="56" />
+              </span>
+              <div class="game-info">
+                <span class="game-name">Minecraft</span>
+                <code class="game-handle">Real_LK</code>
+              </div>
+              <div class="game-actions">
+                <button class="copy-btn" type="button" data-copy="Real_LK" aria-label="Copy Minecraft username to clipboard">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  <span class="copy-label">Copy</span>
+                </button>
+                <a class="copy-btn download-btn" href="https://www.minecraft.net/en-us/download" target="_blank" rel="noopener noreferrer" aria-label="Download Minecraft (opens minecraft.net)">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+                  <span class="copy-label">Download</span>
+                </a>
+              </div>
+            </li>
+
+            <li class="game-row">
+              <span class="game-icon" aria-hidden="true">
+                <img class="app-icon" src="assets/capcut.png" alt="" width="56" height="56" />
+              </span>
+              <div class="game-info">
+                <span class="game-name">CapCut</span>
+                <span class="game-handle">Free video editor &middot; Desktop &amp; Mobile</span>
+              </div>
+              <a class="copy-btn download-btn" href="https://www.capcut.com/download" target="_blank" rel="noopener noreferrer" aria-label="Download CapCut (opens capcut.com)">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+                <span class="copy-label">Download</span>
+              </a>
+            </li>
+          </ul>
+        </section>
       </div>
 
       <!-- Stats bar -->
