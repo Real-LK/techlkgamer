@@ -947,6 +947,237 @@ main {
   .stats-bar { margin-bottom: 2.5rem; }
 }
 
+/* ============================================================
+   MOBILE REFINEMENTS (≤768px) — tuned for 360×800 and 390×844
+   Everything here is scoped to phones, so the 769px+ layout above
+   is byte-for-byte unchanged on PC.
+   ============================================================ */
+@media (max-width: 768px) {
+
+  /* No sideways drift on any page */
+  html,
+  body {
+    overflow-x: clip;
+    max-width: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    overflow-wrap: break-word;
+  }
+
+  .page { min-height: calc(100dvh - 146px); }
+
+  /* ---------- Navbar + drawer ---------- */
+  .hamburger {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-logo {
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  .nav-links {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.2rem;
+    width: min(300px, 86vw);
+    padding: 1rem 0.85rem 1.6rem;
+    box-shadow: -18px 0 40px rgba(0, 0, 0, 0.55);
+  }
+
+  .nav-link {
+    width: 100%;
+    justify-content: flex-start;
+    font-size: 0.9rem;
+    letter-spacing: 0.11em;
+    padding: 0.95rem 0.85rem;
+  }
+
+  .nav-link::after {
+    left: 0.85rem;
+    width: calc(100% - 1.7rem);
+    bottom: 0;
+  }
+
+  .nav-youtube {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 0.45rem;
+    padding: 0.8rem 1rem;
+  }
+
+  /* ---------- Home hero ---------- */
+  .hero { padding: 2.25rem 1.1rem 2.25rem; }
+
+  .hero-badge {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    gap: 0.45rem;
+    padding: 0.5rem 0.9rem;
+    line-height: 1.5;
+    max-width: 100%;
+  }
+
+  .about-heading {
+    font-size: clamp(2.1rem, 11vw, 3rem);
+    letter-spacing: 0.04em;
+  }
+
+  .heading-underline { margin-top: 1.4rem; }
+
+  .channel-name {
+    font-size: 1.02rem;
+    letter-spacing: 0.12em;
+    line-height: 1.5;
+  }
+
+  .channel-prefix { margin-right: 0.25rem; }
+  .channel-tag { margin-left: 0.35rem; letter-spacing: 0.16em; }
+
+  .tagline { font-size: 1rem; letter-spacing: 0.03em; }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.7rem;
+    width: 100%;
+    max-width: 320px;
+    margin-top: 1.8rem;
+  }
+
+  .hero-actions .btn { justify-content: center; width: 100%; }
+
+  /* ---------- Cards + stats ---------- */
+  .cards { width: min(100% - 2rem, 520px); gap: 0.9rem; }
+  .card { padding: 1.35rem 1.15rem; }
+
+  .stats-bar {
+    gap: 0.7rem;
+    padding: 1rem 0.85rem;
+  }
+
+  .stat-label { letter-spacing: 0.12em; }
+
+  /* ---------- Games / editors rows ----------
+     Icon + name on the first row, buttons on a full-width second row,
+     so the handle never gets squeezed into a one-character column. */
+  .game-row {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.85rem 0.8rem;
+    padding: 1rem 1rem 1.05rem;
+    text-align: left;
+  }
+
+  .game-icon {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    border-radius: 10px;
+  }
+
+  .game-icon .app-icon { border-radius: 9px; }
+
+  .game-info {
+    flex: 1 1 8rem;
+    min-width: 0;
+    gap: 0.3rem;
+  }
+
+  .game-name { font-size: 0.86rem; letter-spacing: 0.1em; }
+
+  .game-handle {
+    font-size: 0.88rem;
+    letter-spacing: 0.04em;
+    word-break: normal;
+    overflow-wrap: anywhere;
+    max-width: 100%;
+  }
+
+  .game-actions {
+    flex: 1 1 100%;
+    gap: 0.5rem;
+    justify-content: stretch;
+  }
+
+  .game-actions .copy-btn { flex: 1 1 0; justify-content: center; }
+
+  .game-row > .copy-btn {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+
+  .copy-btn {
+    padding: 0.7rem 0.75rem;
+    letter-spacing: 0.1em;
+  }
+
+  .games-list { margin-top: 1.5rem; gap: 0.75rem; }
+  .games-wrapper { padding: 1.75rem 0 2.25rem; }
+  .games-back { width: 100%; max-width: 320px; justify-content: center; margin-top: 1.5rem; }
+
+  /* ---------- Contact ---------- */
+  .contact-wrapper {
+    gap: 1.5rem;
+    padding: 1.75rem 0 2.25rem;
+  }
+
+  .contact-heading { font-size: clamp(1.7rem, 8vw, 2.2rem); }
+  .contact-lead { font-size: 1rem; }
+
+  .contact-details li {
+    align-items: flex-start;
+    text-align: left;
+    max-width: 100%;
+  }
+
+  .contact-details li > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+
+  /* Big enough to hit with a thumb */
+  .contact-details a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    overflow-wrap: anywhere;
+  }
+
+  .contact-form {
+    padding: 1.15rem 1rem 1.35rem;
+    border-radius: 14px;
+    width: 100%;
+    /* Labels read better left-aligned inside the card */
+    text-align: left;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    min-width: 0;
+    font-size: 1rem;
+    padding: 0.8rem 0.85rem;
+  }
+
+  .form-group textarea { min-height: 132px; }
+
+  .form-success {
+    align-items: flex-start;
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+
+  .form-success svg { flex: 0 0 22px; }
+
+  /* ---------- Footer ---------- */
+  .footer { font-size: 0.82rem; letter-spacing: 0.03em; padding: 1rem 0.85rem; }
+}
+
 /* ===== Reduced motion ===== */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -956,3 +1187,4 @@ main {
   }
   html { scroll-behavior: auto; }
 }
+
