@@ -13,7 +13,6 @@ document.getElementById('footerYear').textContent = new Date().getFullYear();
 const pages = {
   home: document.getElementById('page-home'),
   games: document.getElementById('page-games'),
-  'video-editors': document.getElementById('page-video-editors'),
   contact: document.getElementById('page-contact'),
 };
 
