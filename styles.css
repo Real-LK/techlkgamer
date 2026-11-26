@@ -873,6 +873,9 @@ main {
   }
 
   .nav-links {
+    /* flex is required here: without it the links fall back to block and
+       stack on top of each other in the top-right corner */
+    display: flex;
     position: static;
     top: auto;
     right: auto;
@@ -881,7 +884,8 @@ main {
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
-    gap: clamp(0.75rem, 2vw, 1.5rem);
+    flex-wrap: nowrap;
+    gap: 0.35rem;
     background: none;
     border: none;
     border-radius: 0;
@@ -889,11 +893,12 @@ main {
     transform: none;
   }
 
-  .nav-separator { display: block; }
+  .nav-separator { display: none; }
 
   .nav-link {
-    font-size: 0.78rem;
-    padding: 0.45rem 0.25rem;
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+    padding: 0.45rem 0.6rem;
     min-height: auto;
     white-space: nowrap;
   }
@@ -903,7 +908,8 @@ main {
 
   .nav-youtube {
     width: auto;
-    padding: 0.45rem 0.9rem;
+    gap: 0.35rem;
+    padding: 0.45rem 0.8rem;
     background: transparent;
   }
 
