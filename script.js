@@ -189,6 +189,9 @@ if (likeBtn && likeCountEl) {
 
 /* ============================================================
    YOUTUBE SEARCH (Home) — searches ONLY this channel's videos
+   Matching happens locally on titles + descriptions, so a query
+   only matches words actually written there — hashtags (#shorts)
+   and @mentions (@name) in a title count, nothing else does.
    ============================================================ */
 
 /* ⚠️  PASTE YOUR YOUTUBE DATA API v3 KEY BETWEEN THE QUOTES BELOW:
@@ -199,6 +202,9 @@ const YOUTUBE_API_KEY = 'AIzaSyD0YeQKh8Cz_yTd8Utemwr6UB4tiVMDcbg';
 
 /* The only channel this search looks in */
 const YT_CHANNEL_HANDLE = '@LK_techgamer-y3m';
+
+/* How many matches to show at once */
+const YT_MAX_RESULTS = 8;
 
 const ytForm = document.getElementById('ytSearchForm');
 const ytInput = document.getElementById('ytSearchInput');
@@ -255,12 +261,85 @@ if (ytForm && ytInput && ytBtn && ytStatusEl && ytResultsEl) {
     return years + (years === 1 ? ' year ago' : ' years ago');
   };
 
+  // All uploads for the channel, fetched once per visit. Searching runs over
+  // this list locally, so the query is never handed to YouTube's fuzzy
+  // relevance engine — a word only matches if it is literally written in a
+  // video's title or description.
+  let ytVideosPromise = null;
+
+  const loadVideos = () => {
+    if (ytVideosPromise) return ytVideosPromise;
+
+    ytVideosPromise = (async () => {
+      const channelId = await resolveChannelId();
+      const channelPayload = await apiGet('channels', {
+        part: 'contentDetails',
+        id: channelId,
+      });
+      const channel = channelPayload.items && channelPayload.items[0];
+      const uploads =
+        channel &&
+        channel.contentDetails &&
+        channel.contentDetails.relatedPlaylists &&
+        channel.contentDetails.relatedPlaylists.uploads;
+
+      if (!uploads) throw new Error('Could not read this channel’s uploads.');
+
+      const videos = [];
+      let pageToken = '';
+
+      // 50 per page; a handful of pages covers a channel this size.
+      for (let page = 0; page < 8; page += 1) {
+        const params = { part: 'snippet', playlistId: uploads, maxResults: '50' };
+        if (pageToken) params.pageToken = pageToken;
+
+        const payload = await apiGet('playlistItems', params);
+
+        (payload.items || []).forEach((item) => {
+          const snippet = item.snippet || {};
+          const videoId = snippet.resourceId && snippet.resourceId.videoId;
+          const title = snippet.title || '';
+          if (!videoId) return;
+          if (title === 'Private video' || title === 'Deleted video') return;
+
+          videos.push({
+            videoId: videoId,
+            title: title,
+            description: snippet.description || '',
+            publishedAt: snippet.publishedAt,
+            thumbnails: snippet.thumbnails,
+          });
+        });
+
+        pageToken = payload.nextPageToken || '';
+        if (!pageToken) break;
+      }
+
+      return videos;
+    })();
+
+    // Never cache a failed load — the next search should try again.
+    ytVideosPromise.catch(() => {
+      ytVideosPromise = null;
+    });
+
+    return ytVideosPromise;
+  };
+
+  // Every word the visitor types has to appear in the title or description.
+  const matchesQuery = (video, terms) => {
+    const haystack = (video.title + ' ' + video.description).toLowerCase();
+    return terms.every((term) => haystack.indexOf(term) !== -1);
+  };
+
+  // Items here are the objects built by loadVideos. Keep the shape
+  // { videoId, title, description, publishedAt, thumbnails }.
   const renderResults = (items) => {
     ytResultsEl.textContent = '';
 
     items.forEach((item) => {
-      const snippet = item.snippet || {};
-      const videoId = item.id && item.id.videoId;
+      const video = item;
+      const videoId = video.videoId;
       if (!videoId) return;
 
       const link = document.createElement('a');
@@ -271,7 +350,7 @@ if (ytForm && ytInput && ytBtn && ytStatusEl && ytResultsEl) {
 
       const thumbWrap = document.createElement('span');
       thumbWrap.className = 'yt-thumb';
-      const thumbs = snippet.thumbnails || {};
+      const thumbs = video.thumbnails || {};
       const thumb = thumbs.medium || thumbs.default || {};
       if (thumb.url) {
         const img = document.createElement('img');
@@ -286,15 +365,15 @@ if (ytForm && ytInput && ytBtn && ytStatusEl && ytResultsEl) {
 
       const title = document.createElement('span');
       title.className = 'yt-result-title';
-      title.textContent = snippet.title || 'Untitled video';
+      title.textContent = video.title || 'Untitled video';
 
       const meta = document.createElement('span');
       meta.className = 'yt-result-meta';
-      meta.textContent = timeAgo(snippet.publishedAt);
+      meta.textContent = timeAgo(video.publishedAt);
 
       const desc = document.createElement('span');
       desc.className = 'yt-result-desc';
-      desc.textContent = (snippet.description || '').replace(/\s+/g, ' ').trim().slice(0, 120);
+      desc.textContent = (video.description || '').replace(/\s+/g, ' ').trim().slice(0, 120);
 
       body.append(title, meta, desc);
       link.append(thumbWrap, body);
@@ -304,9 +383,10 @@ if (ytForm && ytInput && ytBtn && ytStatusEl && ytResultsEl) {
 
   const runSearch = async (query) => {
     const term = query.trim();
+    const terms = term.toLowerCase().split(/\s+/).filter(Boolean);
     ytResultsEl.textContent = '';
 
-    if (!term) {
+    if (!terms.length) {
       setStatus('Type something to search my videos.');
       return;
     }
@@ -318,30 +398,27 @@ if (ytForm && ytInput && ytBtn && ytStatusEl && ytResultsEl) {
 
     const requestNumber = ++ytLatestRequest;
     ytBtn.disabled = true;
-    setStatus('Searching…');
+    setStatus('Searching titles, descriptions and hashtags…');
 
     try {
-      const channelId = await resolveChannelId();
-      const payload = await apiGet('search', {
-        part: 'snippet',
-        channelId: channelId,
-        q: term,
-        type: 'video',
-        order: 'relevance',
-        maxResults: '8',
-      });
+      const videos = await loadVideos();
 
       // A newer search started while this one was in flight — drop this one
       if (requestNumber !== ytLatestRequest) return;
 
-      const items = payload.items || [];
-      renderResults(items);
-      setStatus(
-        items.length
-          ? items.length + (items.length === 1 ? ' video found' : ' videos found')
-          : 'No videos matched “' + term + '”.',
-        !items.length
-      );
+      const matches = videos.filter((video) => matchesQuery(video, terms));
+      const shown = matches.slice(0, YT_MAX_RESULTS);
+      renderResults(shown);
+
+      if (!matches.length) {
+        setStatus('No videos matched “' + term + '”.', true);
+      } else if (matches.length > shown.length) {
+        setStatus(
+          'Showing ' + shown.length + ' of ' + matches.length + ' videos that match “' + term + '”.'
+        );
+      } else {
+        setStatus(matches.length + (matches.length === 1 ? ' video found' : ' videos found'));
+      }
     } catch (error) {
       if (requestNumber !== ytLatestRequest) return;
       setStatus(error.message || 'Search failed — please try again.', true);
@@ -354,6 +431,15 @@ if (ytForm && ytInput && ytBtn && ytStatusEl && ytResultsEl) {
     event.preventDefault();
     runSearch(ytInput.value);
   });
+
+  // Warm the uploads list on first interaction so the first search feels instant.
+  ytInput.addEventListener(
+    'focus',
+    () => {
+      loadVideos().catch(() => {});
+    },
+    { once: true }
+  );
 }
 
 /* ============================================================
