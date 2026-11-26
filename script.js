@@ -188,6 +188,175 @@ if (likeBtn && likeCountEl) {
 }
 
 /* ============================================================
+   YOUTUBE SEARCH (Home) — searches ONLY this channel's videos
+   ============================================================ */
+
+/* ⚠️  PASTE YOUR YOUTUBE DATA API v3 KEY BETWEEN THE QUOTES BELOW:
+   Google Cloud console → APIs & Services → Credentials → API key.
+   Enable "YouTube Data API v3" and restrict the key to your site's
+   HTTP referrer, since anything in this file is public. */
+const YOUTUBE_API_KEY = 'AIzaSyD0YeQKh8Cz_yTd8Utemwr6UB4tiVMDcbg';
+
+/* The only channel this search looks in */
+const YT_CHANNEL_HANDLE = '@LK_techgamer-y3m';
+
+const ytForm = document.getElementById('ytSearchForm');
+const ytInput = document.getElementById('ytSearchInput');
+const ytBtn = document.getElementById('ytSearchBtn');
+const ytStatusEl = document.getElementById('ytSearchStatus');
+const ytResultsEl = document.getElementById('ytResults');
+
+let ytChannelId = null;
+let ytLatestRequest = 0;
+
+if (ytForm && ytInput && ytBtn && ytStatusEl && ytResultsEl) {
+  const setStatus = (text, isError) => {
+    ytStatusEl.textContent = text || '';
+    ytStatusEl.classList.toggle('error', Boolean(isError));
+  };
+
+  const apiGet = async (endpoint, params) => {
+    const url = new URL('https://www.googleapis.com/youtube/v3/' + endpoint);
+    Object.keys(params).forEach((param) => url.searchParams.set(param, params[param]));
+    url.searchParams.set('key', YOUTUBE_API_KEY);
+
+    const response = await fetch(url.toString());
+    const payload = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      const message =
+        (payload && payload.error && payload.error.message) ||
+        'YouTube API error (' + response.status + ')';
+      throw new Error(message);
+    }
+    return payload || {};
+  };
+
+  // @handle → channel ID (cached for the rest of the visit)
+  const resolveChannelId = async () => {
+    if (ytChannelId) return ytChannelId;
+    const payload = await apiGet('channels', { part: 'id', forHandle: YT_CHANNEL_HANDLE });
+    const id = payload.items && payload.items[0] && payload.items[0].id;
+    if (!id) throw new Error('Could not find ' + YT_CHANNEL_HANDLE + ' on YouTube.');
+    ytChannelId = id;
+    return id;
+  };
+
+  const timeAgo = (iso) => {
+    const then = new Date(iso).getTime();
+    if (!then) return '';
+    const days = Math.max(0, Math.floor((Date.now() - then) / 86400000));
+    if (days < 1) return 'today';
+    if (days === 1) return '1 day ago';
+    if (days < 30) return days + ' days ago';
+    const months = Math.floor(days / 30);
+    if (months < 12) return months + (months === 1 ? ' month ago' : ' months ago');
+    const years = Math.floor(months / 12);
+    return years + (years === 1 ? ' year ago' : ' years ago');
+  };
+
+  const renderResults = (items) => {
+    ytResultsEl.textContent = '';
+
+    items.forEach((item) => {
+      const snippet = item.snippet || {};
+      const videoId = item.id && item.id.videoId;
+      if (!videoId) return;
+
+      const link = document.createElement('a');
+      link.className = 'yt-result';
+      link.href = 'https://www.youtube.com/watch?v=' + videoId;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+
+      const thumbWrap = document.createElement('span');
+      thumbWrap.className = 'yt-thumb';
+      const thumbs = snippet.thumbnails || {};
+      const thumb = thumbs.medium || thumbs.default || {};
+      if (thumb.url) {
+        const img = document.createElement('img');
+        img.src = thumb.url;
+        img.alt = '';
+        img.loading = 'lazy';
+        thumbWrap.appendChild(img);
+      }
+
+      const body = document.createElement('span');
+      body.className = 'yt-result-body';
+
+      const title = document.createElement('span');
+      title.className = 'yt-result-title';
+      title.textContent = snippet.title || 'Untitled video';
+
+      const meta = document.createElement('span');
+      meta.className = 'yt-result-meta';
+      meta.textContent = timeAgo(snippet.publishedAt);
+
+      const desc = document.createElement('span');
+      desc.className = 'yt-result-desc';
+      desc.textContent = (snippet.description || '').replace(/\s+/g, ' ').trim().slice(0, 120);
+
+      body.append(title, meta, desc);
+      link.append(thumbWrap, body);
+      ytResultsEl.appendChild(link);
+    });
+  };
+
+  const runSearch = async (query) => {
+    const term = query.trim();
+    ytResultsEl.textContent = '';
+
+    if (!term) {
+      setStatus('Type something to search my videos.');
+      return;
+    }
+
+    if (!YOUTUBE_API_KEY.trim() || YOUTUBE_API_KEY.indexOf('PASTE_') === 0) {
+      setStatus('Search isn’t set up yet — add a YouTube Data API key in script.js.', true);
+      return;
+    }
+
+    const requestNumber = ++ytLatestRequest;
+    ytBtn.disabled = true;
+    setStatus('Searching…');
+
+    try {
+      const channelId = await resolveChannelId();
+      const payload = await apiGet('search', {
+        part: 'snippet',
+        channelId: channelId,
+        q: term,
+        type: 'video',
+        order: 'relevance',
+        maxResults: '8',
+      });
+
+      // A newer search started while this one was in flight — drop this one
+      if (requestNumber !== ytLatestRequest) return;
+
+      const items = payload.items || [];
+      renderResults(items);
+      setStatus(
+        items.length
+          ? items.length + (items.length === 1 ? ' video found' : ' videos found')
+          : 'No videos matched “' + term + '”.',
+        !items.length
+      );
+    } catch (error) {
+      if (requestNumber !== ytLatestRequest) return;
+      setStatus(error.message || 'Search failed — please try again.', true);
+    } finally {
+      if (requestNumber === ytLatestRequest) ytBtn.disabled = false;
+    }
+  };
+
+  ytForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    runSearch(ytInput.value);
+  });
+}
+
+/* ============================================================
    GAMES PAGE — copy in-game name to clipboard
    ============================================================ */
 async function copyText(text) {
