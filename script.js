@@ -195,7 +195,8 @@ if (likeBtn && likeCountEl) {
    A typed word has to sit inside one single word: "meme" finds
    memes, #memes and #robloxmemes, and "rivals" or "edits" both
    find #rivalsedits — but letters pulled from different words
-   never match.
+   never match. A search needs at least 2 letters, so typing a
+   single letter like "n" doesn't match every word containing it.
    ============================================================ */
 
 /* ⚠️  PASTE YOUR YOUTUBE DATA API v3 KEY BETWEEN THE QUOTES BELOW:
@@ -408,6 +409,16 @@ if (ytForm && ytInput && ytBtn && ytStatusEl && ytResultsEl) {
 
     if (!terms.length) {
       setStatus('Type something to search my videos.');
+      return;
+    }
+
+    // A single letter would match every word that happens to contain it.
+    const tooShort = terms.filter((word) => word.length < 2);
+    if (tooShort.length) {
+      setStatus(
+        'Search for a word, not a single letter — “' + tooShort[0] + '” is too short. Type at least 2 letters.',
+        true
+      );
       return;
     }
 
