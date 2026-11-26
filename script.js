@@ -192,6 +192,10 @@ if (likeBtn && likeCountEl) {
    Matching happens locally on titles + descriptions, so a query
    only matches words actually written there — hashtags (#shorts)
    and @mentions (@name) in a title count, nothing else does.
+   A typed word has to sit inside one single word: "meme" finds
+   memes, #memes and #robloxmemes, and "rivals" or "edits" both
+   find #rivalsedits — but letters pulled from different words
+   never match.
    ============================================================ */
 
 /* ⚠️  PASTE YOUR YOUTUBE DATA API v3 KEY BETWEEN THE QUOTES BELOW:
@@ -261,6 +265,17 @@ if (ytForm && ytInput && ytBtn && ytStatusEl && ytResultsEl) {
     return years + (years === 1 ? ' year ago' : ' years ago');
   };
 
+  // Break text into lowercase words on anything that isn't a letter or a
+  // digit, so "#RivalsEdits", "@ZokyrMC!", "meme's" and emoji all turn into
+  // plain words. Accents are folded so "café" is reachable by "cafe".
+  const tokenize = (text) =>
+    text
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .split(/[^\p{L}\p{N}]+/u)
+      .filter(Boolean);
+
   // All uploads for the channel, fetched once per visit. Searching runs over
   // this list locally, so the query is never handed to YouTube's fuzzy
   // relevance engine — a word only matches if it is literally written in a
@@ -308,6 +323,9 @@ if (ytForm && ytInput && ytBtn && ytStatusEl && ytResultsEl) {
             description: snippet.description || '',
             publishedAt: snippet.publishedAt,
             thumbnails: snippet.thumbnails,
+            // Every word of the title + description, hashtags and @mentions
+            // included — what searching actually looks at.
+            tokens: tokenize(title + ' ' + (snippet.description || '')),
           });
         });
 
@@ -326,11 +344,12 @@ if (ytForm && ytInput && ytBtn && ytStatusEl && ytResultsEl) {
     return ytVideosPromise;
   };
 
-  // Every word the visitor types has to appear in the title or description.
-  const matchesQuery = (video, terms) => {
-    const haystack = (video.title + ' ' + video.description).toLowerCase();
-    return terms.every((term) => haystack.indexOf(term) !== -1);
-  };
+  // Every word the visitor types has to appear inside one of the video's own
+  // words. Whole words and merged words both count (#rivalsedits answers to
+  // "rivals" and "edits"), but the match can never jump across two words, so
+  // scattered letters alone don't produce a hit.
+  const matchesQuery = (video, terms) =>
+    terms.every((term) => video.tokens.some((token) => token.indexOf(term) !== -1));
 
   // Items here are the objects built by loadVideos. Keep the shape
   // { videoId, title, description, publishedAt, thumbnails }.
@@ -383,7 +402,8 @@ if (ytForm && ytInput && ytBtn && ytStatusEl && ytResultsEl) {
 
   const runSearch = async (query) => {
     const term = query.trim();
-    const terms = term.toLowerCase().split(/\s+/).filter(Boolean);
+    // Same splitting as the video text, so "#meme" or "@MemeLord" work too.
+    const terms = tokenize(term);
     ytResultsEl.textContent = '';
 
     if (!terms.length) {
